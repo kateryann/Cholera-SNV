@@ -10,10 +10,4 @@ for vcf_file in *.vcf; do
 
     bedtools intersect -a A1552.bed -b "$vcf_file" -wa -wb > "${file_name}_intersected.bed" 
 
- 
-
-    # Run Python filter script 
-
-    python filter.py "${file_name}_intersected.bed" 
-
 done
