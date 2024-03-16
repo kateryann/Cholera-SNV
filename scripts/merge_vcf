@@ -1,0 +1,38 @@
+for vcf_file in *.vcf.gz; do
+  # Extract basename without extension
+  vcf_basename=$(basename "$vcf_file" .vcf.gz)
+
+  # Generate index file
+  bcftools index "$vcf_file"
+
+  # Print a message indicating the indexing is complete for a specific file
+  echo "Indexing for $vcf_basename complete."
+done
+
+# Path to the directory containing indexed VCF files
+vcf_directory="./"
+
+# Output merged VCF file
+output_merged="./merged.vcf.gz"
+
+# Create an array to store indexed VCF files
+indexed_vcfs=("$vcf_directory"/*.vcf.gz)
+
+# Check if there are at least two VCF files for merging
+if [ ${#indexed_vcfs[@]} -ge 2 ]; then
+  # Use the first VCF file as the base for the merged file
+  base_vcf="${indexed_vcfs[0]}"
+
+  # Loop through indexed VCF files (starting from the second one) and merge
+  for ((i = 1; i < ${#indexed_vcfs[@]}; i++)); do
+    base_vcf="$base_vcf ${indexed_vcfs[i]}"
+  done
+
+  # Perform the merge using bcftools
+  bcftools merge $base_vcf -o "$output_merged"
+
+  # Print a message indicating the completion of the merge
+  echo "Merged VCF files successfully. Output: $output_merged"
+else
+  echo "Error: Need at least two indexed VCF files for merging."
+fi
