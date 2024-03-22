@@ -1,4 +1,3 @@
-#!/bin/bash
 
 # Target directory where .tsv files will be copied
 TARGET_DIR="/home/pc/Documents/08_03/ariba_reports"
